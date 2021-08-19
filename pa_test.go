@@ -16,6 +16,8 @@ func TestPa(t *testing.T) {
 	// 一直阻塞，没有调用wg.Done()  keeps blocking
 	wg.Add(1)
 
-	_ = pa.NewPa(url).Go()
+	_ = pa.NewPa(url).AddCallback(func(url, body string) {
+		// nothing
+	}).Go()
 	wg.Wait()
 }

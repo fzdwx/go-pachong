@@ -1,4 +1,11 @@
 # Go 爬虫
+
+* [Go 爬虫](#Go-%E7%88%AC%E8%99%AB)
+    * [usage](#usage)
+    * [todo List](#todo-List)
+    * [last](#last)
+
+
 _巨几把耗流量_
 
 能根据入口的url爬取页面中的解析出来的url路径，然后再次对解析出来的url继续爬取...
@@ -8,12 +15,14 @@ URL again...
 
 ## usage
 
-调用pa.Go函数，第一个入参是入口url，传入的函数是每次爬取到的页面返回的页面数据，可以根据需要实现。
+调用`pa.NewPa(string)`函数，第一个入参是入口url，然后调用`AddCallback(func(string,string))`传入的函数是每次爬取到的页面返回的页面数据，可以根据需要实现。最后调用`Go()`开始爬取
 
-call `pa.Go(string,func(string,string))`, the first input parameter is the entry URL, and the function passed in is the page data returned by each
-crawled page, which can be implemented as needed.
+call `pa.NewPa(string)`, the first input parameter is the entry URL, and the call `AddCallback(func(string,string))`
+function passed in is the page data returned by each crawled page, which can be implemented as needed,last call `Go()`
 
 ```go
+var wg sync.WaitGroup
+
 func TestPa(t *testing.T) {
 
 	url := "https://github.com/"
@@ -21,17 +30,18 @@ func TestPa(t *testing.T) {
 	// 一直阻塞，没有调用wg.Done()  keeps blocking
 	wg.Add(1)
 
-	_ = pa.NewPa(url).Go()
+	_ = pa.NewPa(url).AddCallback(func(url, body string) {
+		// nothing
+	}).Go()
 	wg.Wait()
 }
-
 ```
-
 ## todo List
 
 - [ ] todo...
 
 ## last
+
 欢迎任何有助于项目的issue。
 
 Any issues that help the project are welcome。

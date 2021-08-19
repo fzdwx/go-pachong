@@ -28,7 +28,8 @@ func NewPa(mainUrl string) *Pa {
 	}
 }
 
-func (p *Pa) addCallback(f func(url, body string)) *Pa {
+// AddCallback 添加回调函数，每次爬取到一个页面就调用
+func (p *Pa) AddCallback(f func(url, body string)) *Pa {
 	p.callback = f
 	return p
 }
