@@ -13,18 +13,35 @@ var (
 	excludeSuffixes = []string{"png", "ico"}
 )
 
-// Go 开始爬取，传入一个匿名函数，入参是每个页面的数据
-func Go(url string, f func(url, body string)) error {
-	if f == nil {
-		panic("callback function must be not null！")
-	}
+// Pa 当前爬虫的主体
+type Pa struct {
+	mainUrl  string                 // 入口函数
+	callback func(url, body string) // 回调，每次爬取到一个页面就调用
+}
 
-	body, err := get(url)
+func NewPa(mainUrl string) *Pa {
+	return &Pa{
+		mainUrl: mainUrl,
+		callback: func(url, body string) {
+			log.Println(url)
+		},
+	}
+}
+
+func (p *Pa) addCallback(f func(url, body string)) *Pa {
+	p.callback = f
+	return p
+}
+
+// Go 开始爬取，传入一个匿名函数，入参是每个页面的数据
+func (p *Pa) Go() error {
+
+	body, err := get(p.mainUrl)
 	if err != nil {
 		return err
 	}
 
-	do(body, f)
+	do(body, p.callback)
 
 	return nil
 }
