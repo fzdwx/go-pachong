@@ -1,15 +1,16 @@
-package main
+package test
 
 import (
 	"log"
 	"sync"
+	"testing"
 
 	"go-pachong/pa"
 )
 
 var wg sync.WaitGroup
 
-func main() {
+func TestPa(t *testing.T) {
 
 	url := "https://github.com/"
 
@@ -18,11 +19,6 @@ func main() {
 
 	_ = pa.Go(url, func(url, body string) {
 		log.Println(url)
-
-		// if url== "xxx" {
-		// 	wg.Done()
-		// }
 	})
-
 	wg.Wait()
 }
