@@ -57,13 +57,18 @@ func do(body string, f func(url, body string)) {
 		}
 
 		url = addPrefix(url)
+
+		// new thread
 		go func() {
 			body, err := get(url)
 			if err != nil {
 				log.Println(err)
 				return
 			}
+			// callback
 			f(url, body)
+
+			// loop
 			do(body, f)
 		}()
 	}

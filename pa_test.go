@@ -19,5 +19,6 @@ func TestPa(t *testing.T) {
 	_ = pa.NewPa(url).AddCallback(func(url, body string) {
 		// nothing
 	}).Go()
+
 	wg.Wait()
 }
