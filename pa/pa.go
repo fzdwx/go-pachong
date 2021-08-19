@@ -9,28 +9,37 @@ import (
 )
 
 var (
-	re              = regexp.MustCompile(`href="(?s:(.*?))"`)
-	excludeSuffixes = []string{"png", "ico"}
+	re                     = regexp.MustCompile(`href="(?s:(.*?))"`)
+	defaultExcludeSuffixes = []string{"png", "ico"}
+	defaultCallback        = func(url string, body string) {
+		log.Println(url)
+	}
 )
 
 // Pa 当前爬虫的主体
 type Pa struct {
-	mainUrl  string                 // 入口函数
-	callback func(url, body string) // 回调，每次爬取到一个页面就调用
+	mainUrl         string                 // 入口函数
+	callback        func(url, body string) // 回调，每次爬取到一个页面就调用
+	excludeSuffixes []string
 }
 
 func NewPa(mainUrl string) *Pa {
 	return &Pa{
-		mainUrl: mainUrl,
-		callback: func(url, body string) {
-			log.Println(url)
-		},
+		mainUrl:         mainUrl,
+		callback:        defaultCallback,
+		excludeSuffixes: defaultExcludeSuffixes,
 	}
 }
 
 // AddCallback 添加回调函数，每次爬取到一个页面就调用
 func (p *Pa) AddCallback(f func(url, body string)) *Pa {
 	p.callback = f
+	return p
+}
+
+// AddExcludeSuffixes 添加网址后缀排除
+func (p *Pa) AddExcludeSuffixes(excludeSuffixes []string) *Pa {
+	p.excludeSuffixes = excludeSuffixes
 	return p
 }
 
@@ -42,17 +51,17 @@ func (p *Pa) Go() error {
 		return err
 	}
 
-	do(body, p.callback)
+	p.do(body, p.callback)
 
 	return nil
 }
 
-func do(body string, f func(url, body string)) {
+func (p *Pa) do(body string, f func(url, body string)) {
 	matched := re.FindAllString(body, -1)
 	for _, match := range matched {
 		url := processRawUrl(match)
 
-		if url == "" || isExcludeUrl(url, excludeSuffixes) {
+		if url == "" || isExcludeUrl(url, p.excludeSuffixes) {
 			continue
 		}
 
@@ -65,11 +74,12 @@ func do(body string, f func(url, body string)) {
 				log.Println(err)
 				return
 			}
+
 			// callback
 			f(url, body)
 
 			// loop
-			do(body, f)
+			p.do(body, f)
 		}()
 	}
 }
