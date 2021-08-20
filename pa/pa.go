@@ -51,12 +51,12 @@ func (p *Pa) Go() error {
 		return err
 	}
 
-	p.do(body, p.callback)
+	p.do(body)
 
 	return nil
 }
 
-func (p *Pa) do(body string, f func(url, body string)) {
+func (p *Pa) do(body string) {
 	matched := re.FindAllString(body, -1)
 	for _, match := range matched {
 		url := processRawUrl(match)
@@ -76,10 +76,9 @@ func (p *Pa) do(body string, f func(url, body string)) {
 			}
 
 			// callback
-			f(url, body)
-
+			p.callback(url, body)
 			// loop
-			p.do(body, f)
+			p.do(body)
 		}()
 	}
 }
