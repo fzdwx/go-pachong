@@ -113,6 +113,7 @@ func get(url string) (string, error) {
 		return "", err
 	}
 	bytes, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 	return string(bytes), err
 }
 
