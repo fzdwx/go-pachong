@@ -1,6 +1,6 @@
-# Go 爬虫
+# 流量粉碎机
 
-* [Go 爬虫](#Go-%E7%88%AC%E8%99%AB)
+* [流量粉碎机](#流量粉碎机)
     * [usage](#usage)
     * [todo List](#todo-List)
     * [last](#last)
