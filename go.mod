@@ -1,4 +1,4 @@
-module github.com/fzdwx/go-pachong
+module github.com/fzdwx/go-pachong/v1
 
 go 1.16
 
