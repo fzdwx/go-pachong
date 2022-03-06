@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	re                     = regexp.MustCompile(`href="(?s:(.*?))"`)
 	defaultExcludeSuffixes = []string{"png", "ico"}
+	re                     = regexp.MustCompile(`href="(?s:(.*?))"`)
 	defaultCallback        = func(url string, body string) {
 		log.Println(url)
 	}
